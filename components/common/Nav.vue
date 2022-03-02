@@ -37,9 +37,9 @@
 import { mapMutations } from 'vuex'
 
 export default {
-  data() {
-    return {
-      navItems: [
+  computed: {
+    navItems() {
+      return [
         {
           name: 'research',
           children: [
@@ -62,29 +62,19 @@ export default {
         { name: 'education' },
         {
           name: 'publications',
-          children: [
-            {
-              name: '2021年度',
-              path: '2021',
-            },
-            {
-              name: '2020年度',
-              path: '2020',
-            },
-            {
-              name: '2019年度',
-              path: '2019',
-            },
-            {
-              name: '2018年度',
-              path: '2018',
-            },
-          ],
+          children: this.$store.state.publications
+            .map((publication) => {
+              return {
+                name: publication.fields.slug + '年度',
+                path: publication.fields.slug,
+              }
+            })
+            .slice(0, 4),
         },
         { name: 'members' },
         { name: 'contact' },
-      ],
-    }
+      ]
+    },
   },
   methods: {
     ...mapMutations(['close']),
