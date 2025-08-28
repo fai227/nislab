@@ -1,5 +1,4 @@
-import { createClient } from './plugins/contentful.js'
-const client = createClient()
+import { loadAllPosts, loadAllPublications } from './plugins/content_loader'
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
@@ -51,15 +50,6 @@ export default {
         content: 'summary_large_image',
       },
     ],
-    script: [
-      {
-        async: true,
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-NDLRBPBQJZ',
-      },
-      {
-        src: '/static/gtag.js',
-      },
-    ],
     link: [
       {
         rel: 'stylesheet',
@@ -102,13 +92,21 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxt/content',
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/stylelint
     '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/moment
     '@nuxtjs/moment',
+    '@nuxtjs/google-gtag',
   ],
+  content: {
+    dir: 'contents',
+  },
+  'google-gtag': {
+    id: 'G-BYW3D7CH7S',
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -157,34 +155,12 @@ export default {
 
   generate: {
     fallback: true,
-    routes() {
-      const posts = client
-        .getEntries({
-          content_type: 'posts',
-        })
-        .then((entries) => {
-          return entries.items.map((entry) => {
-            return {
-              route: `topics/${entry.sys.id}`,
-              payload: entry,
-            }
-          })
-        })
-      const publications = client
-        .getEntries({
-          content_type: 'publications',
-        })
-        .then((entries) => {
-          return entries.items.map((entry) => {
-            return {
-              route: `publications/${entry.fields.slug}`,
-              payload: entry,
-            }
-          })
-        })
-      return Promise.all([posts, publications]).then((values) => {
-        return [...values[0], ...values[1]]
-      })
+    routes: async() => {
+      const { $content } = require('@nuxt/content')
+      const postRoutes = (await loadAllPosts({ $content })).map(p => `/topics/${p.sys.id}`)
+      const publicationRoutes = (await loadAllPublications({ $content })).map(p => `/publications/${p.fields.slug['en-US']}`)
+
+      return [...postRoutes, ...publicationRoutes]
     },
   },
   publicRuntimeConfig: {

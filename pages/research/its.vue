@@ -11,8 +11,7 @@
 
 <script>
 import { Section, Title, ReturnPage } from '~/components/utility/index'
-import { createClient } from '~/plugins/contentful.js'
-const client = createClient()
+import { loadAllPages } from '~/plugins/content_loader'
 
 export default {
   components: {
@@ -20,19 +19,10 @@ export default {
     Title,
     ReturnPage,
   },
-  async asyncData() {
-    return await client
-      .getEntries({
-        content_type: 'pages',
-        'fields.slug': 'its',
-        limit: 1,
-      })
-      .then((res) => {
-        return {
-          body: res.items[0].fields.body,
-        }
-      })
-      .catch()
+  async asyncData({ $content }) {
+    const allPages = await loadAllPages({ $content })
+    const its = allPages.find(post => post.fields.slug["en-US"] === 'its')
+    return { body: its.fields.body["en-US"] }
   },
   head() {
     return {

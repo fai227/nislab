@@ -12,8 +12,10 @@
     "lint": "yarn lint:js && yarn lint:style"
   },
   "dependencies": {
+    "@nuxt/content": "^1.15.1",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/markdownit": "^2.0.0",
     "@nuxtjs/moment": "^1.6.1",
     "@nuxtjs/pwa": "^3.3.5",

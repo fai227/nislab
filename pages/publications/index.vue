@@ -10,8 +10,7 @@
 <script>
 import { PublicationsList } from '~/components/common/index'
 import { Section, Title } from '~/components/utility/index'
-import { createClient } from '~/plugins/contentful.js'
-const client = createClient()
+import { loadAllPublications } from '~/plugins/content_loader'
 
 export default {
   components: {
@@ -19,18 +18,9 @@ export default {
     Section,
     Title,
   },
-  async asyncData() {
-    return await client
-      .getEntries({
-        content_type: 'publications',
-        order: '-fields.date',
-      })
-      .then((res) => {
-        return {
-          publications: res.items,
-        }
-      })
-      .catch()
+  async asyncData({ $content }) {
+    const allPublications = await loadAllPublications({ $content })
+    return { publications: allPublications }
   },
   head() {
     return {
