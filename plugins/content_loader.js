@@ -39,10 +39,18 @@ async function loadAllPages({ $content }) {
 
 async function loadAllPosts({ $content }) {
     const allPosts = (await loadAllContent({ $content })).filter(e => e.sys.contentType.sys.id === 'posts')
+    allPosts.sort((a, b) => new Date(b.fields.date['en-US']) - new Date(a.fields.date['en-US']))    
 
     const allAssets = await loadAllAssets({ $content })
     for (const post of allPosts) {
-        const asset = allAssets.find(a => a.sys.id === post.fields.headerImage['en-US'].sys.id)
+        let asset = allAssets.find(a => a.sys.id === post.fields.headerImage['en-US'].sys.id)
+        if(!asset) {
+            asset = { fields: { 
+                file: { 'en-US': { url: '/nislab-ogp.png' } },
+                description: { 'en-US': 'No Header Image' }
+            } }
+        }
+
         post.fields.headerImage['en-US'] = asset
     }
 

@@ -50,15 +50,6 @@ export default {
         content: 'summary_large_image',
       },
     ],
-    script: [
-      {
-        async: true,
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-NDLRBPBQJZ',
-      },
-      {
-        src: '/static/gtag.js',
-      },
-    ],
     link: [
       {
         rel: 'stylesheet',
@@ -108,9 +99,13 @@ export default {
     '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/moment
     '@nuxtjs/moment',
+    '@nuxtjs/google-gtag',
   ],
   content: {
     dir: 'contents',
+  },
+  'google-gtag': {
+    id: 'G-BYW3D7CH7S',
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules

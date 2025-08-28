@@ -1932,6 +1932,11 @@
     "consola" "^2.15.0"
     "eslint-webpack-plugin" "^2.4.1"
 
+"@nuxtjs/google-gtag@^1.0.4":
+  "integrity" "sha512-0Xgbx1uQ9pKeV2QdU9xoxJVdgH66qyGQJ0l8pzVxz5X476qvJunj6fbcjWk0gT+MEX/VOAhfT/zw0Z1z9q9oNg=="
+  "resolved" "https://registry.npmjs.org/@nuxtjs/google-gtag/-/google-gtag-1.0.4.tgz"
+  "version" "1.0.4"
+
 "@nuxtjs/markdownit-loader@^1.1.1":
   "integrity" "sha512-D6m4578NavamwD03nOU3H3NkS2zYfFJSMChUczlCGDx05DgAoenY4GdCmML1CnAEH/Cv6Bf230RIwDnD926oyQ=="
   "resolved" "https://registry.npmjs.org/@nuxtjs/markdownit-loader/-/markdownit-loader-1.2.0.tgz"

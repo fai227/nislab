@@ -56,7 +56,6 @@ export const getters = {
     }
 
     if (state.filterQuery.years !== '') {
-      for(const post of data) console.log(post.fields)
       return state.filterQuery.years === '全て'
         ? data
         : (data = data.filter(function (row) {
