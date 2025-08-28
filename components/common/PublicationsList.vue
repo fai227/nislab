@@ -2,9 +2,9 @@
   <ul class="publicationsList__links">
     <li v-for="(publication, index) in publications" :key="index">
       <nuxt-link
-        :to="`/publications/${publication.fields.slug['en-US']}`"
+        :to="`/publications/${publication.fields.slug}`"
         class="publicationsList__link"
-        >{{ publication.fields.title['en-US'] }}</nuxt-link
+        >{{ publication.fields.title }}</nuxt-link
       >
     </li>
   </ul>

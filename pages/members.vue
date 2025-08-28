@@ -9,7 +9,8 @@
 
 <script>
 import { Section, Title, ReturnPage } from '~/components/utility/index'
-import { loadAllMembers } from '~/plugins/content_loader'
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient()
 
 export default {
   components: {
@@ -17,10 +18,18 @@ export default {
     Title,
     ReturnPage,
   },
-
-  async asyncData({ $content }) {
-    const allPages = await loadAllMembers({ $content })
-    return { body: allPages[0].fields.body["en-US"] }
+  async asyncData() {
+    return await client
+      .getEntries({
+        content_type: 'members',
+        limit: 1,
+      })
+      .then((res) => {
+        return {
+          body: res.items[0].fields.body,
+        }
+      })
+      .catch()
   },
   head() {
     return {

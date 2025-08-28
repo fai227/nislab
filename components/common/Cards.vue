@@ -5,9 +5,9 @@
         v-for="post in posts"
         :id="post.sys.id"
         :key="post.sys.id"
-        :title="post.fields.title['en-US']"
-        :date="post.fields.date['en-US']"
-        :img="post.fields.headerImage['en-US']"
+        :title="post.fields.title"
+        :date="post.fields.date"
+        :img="post.fields.headerImage"
       />
     </article>
   </div>
