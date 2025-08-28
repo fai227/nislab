@@ -6,8 +6,8 @@
         <p class="card__date">{{ date }}</p>
       </div>
       <img
-        :src="img.fields.file.url"
-        :alt="img.fields.description"
+        :src="img.fields.file['en-US'].url"
+        :alt="img.fields.description ? img.fields.description['en-US'] : ''"
         class="card__img"
       />
     </nuxt-link>

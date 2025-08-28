@@ -1,6 +1,4 @@
-import { createClient } from '~/plugins/contentful.js'
-const client = createClient()
-
+import { loadAllPosts, loadAllYear, loadAllCategory, loadAllPublications } from '~/plugins/content_loader'
 export const state = () => ({
   posts: [],
   publications: [],
@@ -15,10 +13,10 @@ export const mutations = {
     state.posts = res
   },
   setYears(state, res) {
-    res.forEach((index) => state.years.push(index.fields.year))
+    res.forEach((index) => state.years.push(index.fields.year['en-US']))
   },
   setCategories(state, res) {
-    res.forEach((index) => state.categories.push(index.fields.name))
+    res.forEach((index) => state.categories.push(index.fields.name['en-US']))
   },
   setPublications(state, res) {
     state.publications = res
@@ -43,7 +41,7 @@ export const getters = {
 
     if (state.filterQuery.title !== '') {
       data = data.filter(function (row) {
-        return row.fields.title.includes(state.filterQuery.title)
+        return row.fields.title['en-US'].includes(state.filterQuery.title)
       })
     }
 
@@ -52,16 +50,17 @@ export const getters = {
         ? data
         : (data = data.filter(function (row) {
             return (
-              row.fields.category.fields.name === state.filterQuery.categories
+              row.fields.category['en-US'].fields.name['en-US'] === state.filterQuery.categories
             )
           }))
     }
 
     if (state.filterQuery.years !== '') {
+      for(const post of data) console.log(post.fields)
       return state.filterQuery.years === '全て'
         ? data
         : (data = data.filter(function (row) {
-            return row.fields.year.fields.year === state.filterQuery.years
+            return row.fields.year['en-US'].fields.year['en-US'] === state.filterQuery.years
           }))
     }
 
@@ -72,48 +71,19 @@ export const getters = {
 
 export const actions = {
   async getPosts({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'posts',
-        order: '-fields.date',
-        limit: 1000,
-      })
-      .then((entries) => {
-        commit('setPosts', entries.items)
-      })
-      .catch()
+    const allPosts = await loadAllPosts({ $content: this.$content })
+    commit('setPosts', allPosts)
   },
   async getYears({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'year',
-        order: '-fields.year',
-      })
-      .then((entries) => {
-        commit('setYears', entries.items)
-      })
-      .catch()
+    const allYears = await loadAllYear({ $content: this.$content })
+    commit('setYears', allYears)
   },
   async getCategories({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'category',
-        order: 'fields.order',
-      })
-      .then((entries) => {
-        commit('setCategories', entries.items)
-      })
-      .catch()
+    const allCategories = await loadAllCategory({ $content: this.$content })
+    commit('setCategories', allCategories)
   },
   async getPublications({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'publications',
-        order: '-fields.date',
-      })
-      .then((entries) => {
-        commit('setPublications', entries.items)
-      })
-      .catch()
+    const allPublications = await loadAllPublications({ $content: this.$content })
+    commit('setPublications', allPublications)
   },
 }
