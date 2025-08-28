@@ -2,31 +2,31 @@
   <Section>
     <div class="topic">
       <div class="topic__header">
-        <h2 class="topic__title">{{ post.fields.title['en-US'] }}</h2>
-        <p class="topic__date">{{ post.fields.date['en-US'] }}</p>
+        <h2 class="topic__title">{{ post.post.fields.title }}</h2>
+        <p class="topic__date">{{ post.post.fields.date }}</p>
       </div>
       <!-- eslint-disable vue/no-v-html -->
       <article
         class="topic__content content"
-        v-html="$md.render(post.fields.body['en-US'])"
+        v-html="$md.render(post.post.fields.body)"
       />
       <article class="topic__around">
-        <article v-if="nextPost" class="-left">
+        <article v-if="nextPost.nextPost" class="-left">
           <h3 class="topic__aroundTitle">← 次の記事</h3>
           <Card
-            :id="nextPost.sys.id"
-            :title="nextPost.fields.title['en-US']"
-            :date="nextPost.fields.date['en-US']"
-            :img="nextPost.fields.headerImage['en-US']"
+            :id="nextPost.nextPost.sys.id"
+            :title="nextPost.nextPost.fields.title"
+            :date="nextPost.nextPost.fields.date"
+            :img="nextPost.nextPost.fields.headerImage"
           />
         </article>
-        <article v-if="previousPost" class="-right">
+        <article v-if="previousPost.previousPost" class="-right">
           <h3 class="topic__aroundTitle -r">前の記事 →</h3>
           <Card
-            :id="previousPost.sys.id"
-            :title="previousPost.fields.title['en-US']"
-            :date="previousPost.fields.date['en-US']"
-            :img="previousPost.fields.headerImage['en-US']"
+            :id="previousPost.previousPost.sys.id"
+            :title="previousPost.previousPost.fields.title"
+            :date="previousPost.previousPost.fields.date"
+            :img="previousPost.previousPost.fields.headerImage"
           />
         </article>
       </article>
@@ -38,7 +38,9 @@
 <script>
 import { Section, ReturnPage } from '~/components/utility/index'
 import { Card } from '~/components/common/index'
-import { loadAllPosts } from '~/plugins/content_loader'
+
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient()
 
 export default {
   components: {
@@ -46,35 +48,62 @@ export default {
     Card,
     ReturnPage,
   },
-  async asyncData({ $content, params }) {
-    const allPosts = await loadAllPosts({ $content })
-
-    const index = allPosts.findIndex(post => post.sys.id === params.topic)
-    const post = allPosts[index]
-    const previousPost = allPosts[index - 1]
-    const nextPost = allPosts[index + 1]
-
+  async asyncData({ params }) {
+    const post = await client
+      .getEntry(params.topic)
+      .then((post) => {
+        return {
+          post,
+        }
+      })
+      .catch()
+    const previousPost = await client
+      .getEntries({
+        content_type: 'posts',
+        order: '-fields.date',
+        'fields.date[lt]': post.post.fields.date,
+        limit: 1,
+      })
+      .then((previousPost) => {
+        return {
+          previousPost: previousPost.items[0],
+        }
+      })
+      .catch()
+    const nextPost = await client
+      .getEntries({
+        content_type: 'posts',
+        order: 'fields.date',
+        'fields.date[gt]': post.post.fields.date,
+        limit: 1,
+      })
+      .then((nextPost) => {
+        return {
+          nextPost: nextPost.items[0],
+        }
+      })
+      .catch()
     return { post, previousPost, nextPost }
   },
   head({ $config }) {
     return {
-      title: this.post.fields.title['en-US'] + ' | NISLAB',
+      title: this.post.post.fields.title + ' | NISLAB',
       meta: [
         { hid: 'og:type', property: 'og:type', content: 'website' },
         {
           hid: 'og:url',
           property: 'og:url',
-          content: $config.baseURL + this.post.sys.id,
+          content: $config.baseURL + this.post.post.sys.id,
         },
         {
           hid: 'og:title',
           property: 'og:title',
-          content: this.post.fields.title['en-US'] + ' | NISLAB',
+          content: this.post.post.fields.title + ' | NISLAB',
         },
         {
           hid: 'og:image',
           property: 'og:image',
-          content: 'https:' + this.post.fields.headerImage['en-US'].fields.file['en-US'].url,
+          content: 'https:' + this.post.post.fields.headerImage.fields.file.url,
         },
       ],
     }

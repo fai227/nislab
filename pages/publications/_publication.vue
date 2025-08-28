@@ -4,8 +4,8 @@
       <Title :title="`Publications`" :sub-title="`研究業績`" />
       <!-- eslint-disable vue/no-v-html -->
       <article class="publications__content content">
-        <h3 class="publications__title">{{ publication.fields.title['en-US'] }}</h3>
-        <div v-html="$md.render(publication.fields.body['en-US'])" />
+        <h3 class="publications__title">{{ publication.fields.title }}</h3>
+        <div v-html="$md.render(publication.fields.body)" />
       </article>
       <ReturnPage />
     </Section>
@@ -19,7 +19,8 @@
 <script>
 import { PublicationsList } from '~/components/common/index'
 import { Section, Title, ReturnPage } from '~/components/utility/index'
-import { loadAllPublications } from '~/plugins/content_loader'
+import { createClient } from '~/plugins/contentful.js'
+const client = createClient()
 
 export default {
   components: {
@@ -28,14 +29,30 @@ export default {
     Title,
     ReturnPage,
   },
-  async asyncData({ $content, params }) {
-    const allPublications = await loadAllPublications({ $content })
-    const publication = allPublications.find(pub => pub.fields.slug["en-US"] === params.publication)
-    return { publications: allPublications, publication }
+  async asyncData({ params }) {
+    const publication = await client
+      .getEntries({
+        content_type: 'publications',
+        'fields.slug': params.publication,
+      })
+      .then((res) => {
+        return res.items[0]
+      })
+      .catch()
+    const publications = await client
+      .getEntries({
+        content_type: 'publications',
+        order: '-fields.date',
+      })
+      .then((res) => {
+        return res.items
+      })
+      .catch()
+    return { publications, publication }
   },
   head({ $config }) {
     return {
-      title: this.publication.fields.title['en-US'] + ' | NISLAB',
+      title: this.publication.fields.title + ' | NISLAB',
       meta: [
         {
           hid: 'og:url',
@@ -45,7 +62,7 @@ export default {
         {
           hid: 'og:title',
           property: 'og:title',
-          content: this.publication.fields.title['en-US'] + ' | NISLAB',
+          content: this.publication.fields.title + ' | NISLAB',
         },
       ],
     }

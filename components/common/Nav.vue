@@ -65,8 +65,8 @@ export default {
           children: this.$store.state.publications
             .map((publication) => {
               return {
-                name: publication.fields.slug['en-US'] + '年度',
-                path: publication.fields.slug['en-US'],
+                name: publication.fields.slug + '年度',
+                path: publication.fields.slug,
               }
             })
             .slice(0, 4),
