@@ -54,10 +54,10 @@ export default {
     script: [
       {
         async: true,
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-NDLRBPBQJZ',
+        src: 'https://www.googletagmanager.com/gtag/js?id=G-BYW3D7CH7S',
       },
       {
-        src: '/static/gtag.js',
+        src: '/gtag.js',
       },
     ],
     link: [
@@ -68,24 +68,24 @@ export default {
       {
         rel: 'apple-touch-icon',
         sizes: '180x180',
-        href: '/static/apple-touch-icon.png',
+        href: '/apple-touch-icon.png',
       },
       {
         rel: 'icon',
         sizes: '16x16',
         type: 'image/png',
-        href: '/static/favicon-16x16.png',
+        href: '/favicon-16x16.png',
       },
       {
         rel: 'icon',
         sizes: '32x32',
         type: 'image/png',
-        href: '/static/favicon-32x32.png',
+        href: '/favicon-32x32.png',
       },
       {
         rel: 'icon',
         type: 'image/x-icon',
-        href: '/static/favicon.ico',
+        href: '/favicon.ico',
       },
     ],
   },
