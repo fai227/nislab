@@ -2,6 +2,6 @@
 
 yarn install --production
 
-yarn generate
+NODE_OPTIONS="--max-old-space-size=4096" yarn generate
 
 exit 0
