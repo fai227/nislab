@@ -50,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 .publications {
   &__list {
-    margin: 4rem auto 0;
+    margin: 4rem auto 0 !important;
   }
 }
 </style>
