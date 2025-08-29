@@ -71,49 +71,28 @@ export const getters = {
 }
 
 export const actions = {
-  async getPosts({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'posts',
-        order: '-fields.date',
-        limit: 1000,
-      })
-      .then((entries) => {
-        commit('setPosts', entries.items)
-      })
-      .catch()
-  },
-  async getYears({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'year',
-        order: '-fields.year',
-      })
-      .then((entries) => {
-        commit('setYears', entries.items)
-      })
-      .catch()
-  },
-  async getCategories({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'category',
-        order: 'fields.order',
-      })
-      .then((entries) => {
-        commit('setCategories', entries.items)
-      })
-      .catch()
-  },
-  async getPublications({ commit }) {
-    await client
-      .getEntries({
-        content_type: 'publications',
-        order: '-fields.date',
-      })
-      .then((entries) => {
-        commit('setPublications', entries.items)
-      })
-      .catch()
+  async nuxtServerInit({ commit }) {
+    const posts = await client.getEntries({
+      content_type: 'posts',
+      order: '-fields.date',
+      limit: 1000,
+    })
+    const years = await client.getEntries({
+      content_type: 'year',
+      order: '-fields.year',
+    })
+    const categories = await client.getEntries({
+      content_type: 'category',
+      order: 'fields.order',
+    })
+    const publications = await client.getEntries({
+      content_type: 'publications',
+      order: '-fields.date',
+    })
+
+    commit('setPosts', posts.items)
+    commit('setYears', years.items)
+    commit('setCategories', categories.items)
+    commit('setPublications', publications.items)
   },
 }

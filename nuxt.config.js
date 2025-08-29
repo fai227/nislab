@@ -165,7 +165,7 @@ export default {
         .then((entries) => {
           return entries.items.map((entry) => {
             return {
-              route: `topics/${entry.sys.id}`,
+              route: `/topics/${entry.sys.id}`,
               payload: entry,
             }
           })
@@ -177,7 +177,7 @@ export default {
         .then((entries) => {
           return entries.items.map((entry) => {
             return {
-              route: `publications/${entry.fields.slug}`,
+              route: `/publications/${entry.fields.slug}`,
               payload: entry,
             }
           })
