@@ -9,6 +9,7 @@ module.exports = {
     return contentful.createClient({
       space: config.SPACE_ID,
       accessToken: config.CTF_ACCESS_TOKEN,
+      timeout: 60000,
     })
   },
 }
