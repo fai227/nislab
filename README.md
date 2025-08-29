@@ -92,7 +92,31 @@ Apache を再起動します。
 sudo systemctl restart httpd
 ```
 
-### 6. SSG
+### 6. スワップ領域の設定
+コンテンツの量が増えてきたためビルド時にメモリが足らない場合が出てきました。
+なので、スワップ領域を設定します．
+```sh
+# 設定の確認
+free -m
+
+# スワップファイルの設定 (4GB)
+sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+
+# アクセス権限付与
+sudo chmod 600 /swapfile
+
+# スワップ領域の有効化
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# スワップ有効化の確認
+sudo swapon --show
+
+# 永続化
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+### 7. SSG
 
 ```sh
 cd /var/www/html/nislab/
@@ -100,7 +124,7 @@ cd /var/www/html/nislab/
 yarn generate
 ```
 
-### 7. Redirect 設定
+### 8. Redirect 設定
 
 元々、 `https://nislab.doshisha.ac.jp/class` には佐藤先生が授業で利用するファイル群が保管されていましたが、 <http://cs.nislab.io/class> に移設しました。
 
@@ -113,7 +137,7 @@ yarn generate
 + Redirect /class http://cs.nislab.io/class
 ```
 
-### 8. TLS (HTTPS) 化
+### 9. TLS (HTTPS) 化
 
 > <https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-2.html>
 
