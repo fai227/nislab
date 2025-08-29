@@ -143,6 +143,6 @@ export default {
 
 <style>
 .v-application a {
-  color: #000;
+  color: #000 !important;
 }
 </style>
