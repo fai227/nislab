@@ -103,7 +103,11 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: 'https:' + this.post.post.fields.headerImage.fields.file.url,
+          content:
+            'https:' +
+            (this.post.post.fields.headerImage.fields
+              ? this.post.post.fields.headerImage.fields.file.url
+              : '/nislab-ogp.png'),
         },
       ],
     }

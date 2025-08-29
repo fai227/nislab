@@ -55,10 +55,6 @@ export default {
   },
   mounted() {
     this.path === '/' ? (this.lowerPage = false) : (this.lowerPage = true)
-    this.$store.dispatch('getPosts')
-    this.$store.dispatch('getYears')
-    this.$store.dispatch('getCategories')
-    this.$store.dispatch('getPublications')
   },
   methods: {
     handleTouchMove(event) {
