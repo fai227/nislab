@@ -40,7 +40,7 @@
           >免責事項</nuxt-link
         >
       </div>
-      <small class="footer__copy">&copy; {{ new Date().getFullYear() }} NISLAB.</small>
+      <small class="footer__copy">&copy; 2021 NISLAB.</small>
     </article>
   </footer>
 </template>
