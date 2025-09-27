@@ -44,6 +44,7 @@ export default {
   &__link {
     display: flex;
     flex-wrap: wrap;
+    transition: all 0.3s;
   }
 
   &__header {
@@ -53,7 +54,7 @@ export default {
     width: 100%;
     padding: 1rem 0 0.5rem 0.5rem;
     overflow: hidden;
-    transition: all 0.2s;
+    transition: all 0.3s;
   }
 
   &__title {
@@ -79,22 +80,18 @@ export default {
     width: 100%;
     height: 180px;
     object-fit: cover;
-    border-radius: 10px 10px 0 0;
-    transition: all 0.2s;
+    border-radius: 10px;
+    transition: all 0.3s;
   }
 
   &__link:hover {
+    transform: scale(0.8, 0.8);
     .card__img {
       filter: grayscale(50%);
-      border-radius: 10px;
-      transition: all 0.3s;
-      transform: scale(0.8, 0.8);
     }
 
     .card__header {
       color: #333;
-      transition: all 0.3s;
-      transform: scale(0.9, 0.9);
     }
   }
 }

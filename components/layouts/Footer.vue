@@ -40,7 +40,7 @@
           >免責事項</nuxt-link
         >
       </div>
-      <small class="footer__copy">&copy; 2021 NISLAB.</small>
+      <small class="footer__copy">&copy; {{ buildYear }} NISLAB.</small>
     </article>
   </footer>
 </template>
@@ -52,6 +52,11 @@ export default {
   components: {
     NislabDark,
     NewTab,
+  },
+  data() {
+    return {
+      buildYear: new Date().getFullYear(),
+    }
   },
 }
 </script>

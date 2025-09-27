@@ -47,22 +47,18 @@ export const getters = {
       })
     }
 
-    if (state.filterQuery.categories !== '') {
-      return state.filterQuery.categories === '全て'
-        ? data
-        : (data = data.filter(function (row) {
-            return (
-              row.fields.category.fields.name === state.filterQuery.categories
-            )
-          }))
+    if (state.filterQuery.categories !== ''  && state.filterQuery.categories !== '全て') {
+      data = data.filter(function (row) {
+        return (
+          row.fields.category.fields.name === state.filterQuery.categories
+        )
+      })
     }
 
-    if (state.filterQuery.years !== '') {
-      return state.filterQuery.years === '全て'
-        ? data
-        : (data = data.filter(function (row) {
-            return row.fields.year.fields.year === state.filterQuery.years
-          }))
+    if (state.filterQuery.years !== '' && state.filterQuery.years !== '全て') {
+      data = data.filter(function (row) {
+        return row.fields.year.fields.year === state.filterQuery.years
+      })
     }
 
     return data
