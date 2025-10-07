@@ -125,7 +125,12 @@ a {
   th,
   td {
     line-height: 2em;
+    border-top: solid 1px #999;
     border-bottom: solid 1px #999;
+  }
+
+  th {
+    font-weight: bold;
   }
 
   tr :not(:first-child) {

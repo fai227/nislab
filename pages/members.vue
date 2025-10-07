@@ -51,7 +51,8 @@ export default {
   width: $content-width;
 
   &__content {
-    margin-top: 4rem;
+    max-width: 90%;
+    margin: 4rem auto 8rem;
 
     @include mq(lap) {
       overflow-x: scroll;
