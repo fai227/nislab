@@ -98,7 +98,12 @@
       </p>
       <h3>第10条（お問い合わせ窓口）</h3>
       <p>本ポリシーに関するお問い合わせは，下記の窓口までお願いいたします．</p>
-      <p>Eメールアドレス: ksato@mail.doshisha.ac.jp</p>
+      <p>
+        Eメールアドレス:
+        <a href="mailto:ksato@mail.doshisha.ac.jp" style="display: inline"
+          >ksato@mail.doshisha.ac.jp</a
+        >
+      </p>
       <p>以上</p>
     </article>
     <ReturnPage />
