@@ -22,7 +22,7 @@
           >
             <nuxt-link
               :to="`/${item.name}/${children.path}`"
-              class="nav__link -reverce"
+              class="nav__link -reverse"
               :aria-label="`${children.name}ページに遷移する`"
               >{{ children.name }}</nuxt-link
             >
@@ -84,6 +84,10 @@ export default {
 
 <style lang="scss" scoped>
 .nav {
+  @include mq(desk) {
+    width: 100%;
+  }
+
   &__list {
     display: flex;
     height: 1.5em;
@@ -92,6 +96,8 @@ export default {
       flex-direction: column;
       align-items: center;
       height: auto;
+      max-height: calc(100vh - 64px - 1.35rem);
+      overflow-y: auto;
       color: #fff;
 
       a:hover {

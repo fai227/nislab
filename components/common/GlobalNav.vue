@@ -23,6 +23,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-top: 64px;
   overflow-y: auto;
   background-color: $main-color;
 }
