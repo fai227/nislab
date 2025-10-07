@@ -58,7 +58,13 @@ export default {
   },
   data() {
     return {
-      images: ['IMG_1630.jpeg', 'Photo4.jpg', 'Photo3.jpg'],
+      images: [
+        'deliro.webp',
+        'drone.webp',
+        'simulator.webp',
+        'vr.webp',
+        'car.webp',
+      ],
       name: ['Network', 'Information', 'System', 'Laboratory'],
       swiperOption: {
         speed: 1000,

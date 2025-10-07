@@ -7,6 +7,7 @@
       </div>
       <!-- eslint-disable vue/no-v-html -->
       <article
+        ref="content"
         class="topic__content content"
         v-html="$md.render(post.post.fields.body)"
       />
@@ -111,6 +112,22 @@ export default {
         },
       ],
     }
+  },
+  mounted() {
+    const content = this.$refs.content
+    content.addEventListener('click', this.handleImageClick)
+  },
+  beforeDestroy() {
+    const content = this.$refs.content
+    content.removeEventListener('click', this.handleImageClick)
+  },
+  methods: {
+    handleImageClick(event) {
+      if (event.target.tagName === 'IMG') {
+        const imageUrl = event.target.src
+        window.open(imageUrl, '_blank')
+      }
+    },
   },
 }
 </script>
