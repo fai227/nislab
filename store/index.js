@@ -47,11 +47,12 @@ export const getters = {
       })
     }
 
-    if (state.filterQuery.categories !== ''  && state.filterQuery.categories !== '全て') {
+    if (
+      state.filterQuery.categories !== '' &&
+      state.filterQuery.categories !== '全て'
+    ) {
       data = data.filter(function (row) {
-        return (
-          row.fields.category.fields.name === state.filterQuery.categories
-        )
+        return row.fields.category.fields.name === state.filterQuery.categories
       })
     }
 

@@ -36,7 +36,7 @@
       </v-container>
       <article class="topics__items">
         <Card
-          v-for="post in filteredPosts"
+          v-for="post in displayedPosts"
           :id="post.sys.id"
           :key="post.sys.id"
           :title="post.fields.title"
@@ -44,6 +44,9 @@
           :img="post.fields.headerImage"
         />
       </article>
+      <v-row v-if="hasMore" justify="center" class="topics__more">
+        <v-btn @click="loadMore">もっと見る</v-btn>
+      </v-row>
       <p v-if="filteredPosts.length === 0" class="topics__error">
         表示できる投稿がありません
       </p>
@@ -71,6 +74,8 @@ export default {
         years: '',
         categories: '',
       },
+      initialItems: 12,
+      itemsToShow: 12,
     }
   },
   head() {
@@ -93,20 +98,32 @@ export default {
     categories() {
       return this.$store.state.categories
     },
+    displayedPosts() {
+      return this.filteredPosts.slice(0, this.itemsToShow)
+    },
+    hasMore() {
+      return this.filteredPosts.length > this.itemsToShow
+    },
   },
   mounted() {
+    this.itemsToShow = this.initialItems
     this.setFilterQuery(this.filterQuery)
   },
   methods: {
     ...mapMutations(['setFilterQuery']),
     handleChangeQuery() {
+      this.itemsToShow = this.initialItems
       this.setFilterQuery(this.filterQuery)
     },
     reset() {
       this.filterQuery.title = ''
       this.filterQuery.categories = ''
       this.filterQuery.years = ''
+      this.itemsToShow = this.initialItems
       this.setFilterQuery(this.filterQuery)
+    },
+    loadMore() {
+      this.itemsToShow += this.initialItems
     },
   },
 }
@@ -132,6 +149,11 @@ export default {
     max-width: 100%;
     margin: 0 auto;
     margin-top: 4rem;
+  }
+
+  &__more {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
   }
 
   &__error {
