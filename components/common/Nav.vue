@@ -157,7 +157,7 @@ export default {
       color: #666;
     }
 
-    &:hover.-reverce {
+    &:hover.-reverse {
       color: #ddd;
     }
 

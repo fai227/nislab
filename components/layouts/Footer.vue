@@ -12,6 +12,17 @@
       </div>
       <div class="footer__contents">
         <div class="footer__link">
+          <a href="https://x.com/nislab_sato" target="blank"
+            >NISLAB X アカウント</a
+          ><NewTab class="footer__newTab" />
+        </div>
+        <div class="footer__link">
+          <a href="https://www.instagram.com/nislab101/" target="blank"
+            >NISLAB Instagram アカウント</a
+          ><NewTab class="footer__newTab" />
+        </div>
+        <div class="footer__divider"></div>
+        <div class="footer__link">
           <a href="https://www.doshisha.ac.jp/" target="blank">同志社大学</a
           ><NewTab class="footer__newTab" />
         </div>
@@ -25,8 +36,10 @@
             >名古屋大学組込みシステム研究センター</a
           ><NewTab class="footer__newTab" />
         </div>
+        <div class="footer__divider"></div>
         <div class="footer__link">
-          <a href="https://be.contentful.com/login" target="blank">ログイン</a
+          <a href="https://be.contentful.com/login" target="blank"
+            >Webページ管理サイト</a
           ><NewTab class="footer__newTab" />
         </div>
       </div>
@@ -121,25 +134,12 @@ export default {
     @include mq(tab) {
       align-items: center;
     }
-
-    & > :nth-last-child(2) {
-      padding: 0 0 1.5rem 1rem;
-      border-bottom: 1px solid $sub-color;
-
-      @include mq(tab) {
-        padding: 0 0 1.5rem 0;
-      }
-    }
-
-    & > :last-child {
-      padding-top: 1.5rem;
-    }
   }
 
   &__link {
     display: flex;
     align-items: center;
-    line-height: 2em;
+    line-height: 1.75em;
 
     @include mq(tab) {
       font-size: 0.825rem;
@@ -180,6 +180,10 @@ export default {
   &__copy {
     margin: 0.5rem 0;
     font-size: 0.75rem;
+  }
+
+  &__divider {
+    margin: 0.5rem 0;
   }
 
   a {

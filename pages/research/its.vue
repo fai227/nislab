@@ -2,7 +2,7 @@
   <Section class="its">
     <Title :title="`ITS`" :sub-title="`Intelligent Transport Systems`" />
     <!-- eslint-disable vue/no-v-html -->
-    <article class="its__content content">
+    <article ref="content" class="its__content content">
       <div v-html="$md.render(body)" />
     </article>
     <ReturnPage text="研究一覧へ" slug="/research" />
@@ -45,6 +45,22 @@ export default {
         },
       ],
     }
+  },
+  mounted() {
+    const content = this.$refs.content
+    content.addEventListener('click', this.handleImageClick)
+  },
+  beforeDestroy() {
+    const content = this.$refs.content
+    content.removeEventListener('click', this.handleImageClick)
+  },
+  methods: {
+    handleImageClick(event) {
+      if (event.target.tagName === 'IMG') {
+        const imageUrl = event.target.src
+        window.open(imageUrl, '_blank')
+      }
+    },
   },
 }
 </script>

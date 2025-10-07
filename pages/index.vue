@@ -4,9 +4,10 @@
       <swiper :options="swiperOption" class="hero__swiper">
         <swiper-slide v-for="(image, index) in images" :key="index">
           <img
-            :src="require(`~/assets/images/${image}`)"
-            alt="NISLABイメージ画像"
+            :src="require(`~/assets/images/${image.src}`)"
+            :alt="`NISLABイメージ画像 ${index + 1}`"
             class="hero__image"
+            :style="{ objectPosition: image.objectPosition }"
           />
         </swiper-slide>
       </swiper>
@@ -58,7 +59,13 @@ export default {
   },
   data() {
     return {
-      images: ['IMG_1630.jpeg', 'Photo4.jpg', 'Photo3.jpg'],
+      images: [
+        { src: 'drone.webp', objectPosition: '30% 30%' },
+        { src: 'vr.webp', objectPosition: '55% 0%' },
+        { src: 'deliro.webp', objectPosition: 'left bottom' },
+        { src: 'simulator.webp', objectPosition: '40% 50%' },
+        { src: 'car.webp', objectPosition: '30% 50%' },
+      ],
       name: ['Network', 'Information', 'System', 'Laboratory'],
       swiperOption: {
         speed: 1000,
@@ -107,11 +114,6 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 0 0;
-
-    @include mq(tab) {
-      object-position: 50% 50%;
-    }
   }
 
   &__title {
