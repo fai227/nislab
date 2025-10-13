@@ -33,11 +33,11 @@ jobs:
           echo "NUXT_ENV_CTF_ACCESS_TOKEN=${{ secrets.NUXT_ENV_CTF_ACCESS_TOKEN }}" >> .env
           echo "NUXT_ENV_BASE_URL=${{ secrets.NUXT_ENV_BASE_URL }}" >> .env
 
-      # 🏗️ Nuxt 2 ビルド
+      # 🏗️ Nuxt 2 ビルド（詳細ログ付き）
       - name: Install dependencies and build
         run: |
           yarn install --production
-          yarn generate
+          yarn generate --fail-on-error --quiet false
 
       # 📦 成果物をアーカイブ
       - name: Archive build files
@@ -52,7 +52,7 @@ jobs:
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/tmp/
           ssh -i aws_lightsail_key -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
-            "cd /var/www/html/nislab && rm -rf ./dist && tar -xzf /tmp/dist.tar.gz && mv dist/* . && rm -rf dist /tmp/dist.tar.gz"
+            "mkdir -p /var/www/html/nislab/dist && cd /var/www/html/nislab/dist && rm -rf ./* && tar -xzf /tmp/dist.tar.gz -C /var/www/html/nislab/dist && rm /tmp/dist.tar.gz"
 
       # ✅ 成功通知
       - name: Notify Slack (success)
@@ -62,6 +62,7 @@ jobs:
           SLACK_COLOR: good
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_CHANNEL: 'app-website-nislab'
+          SLACK_ICON: https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2021-07-06/2257469713729_06357f0ef4a522dfb049_72.png
           SLACK_USERNAME: 'NISLAB GitHub Actions'
           SLACK_TITLE: "✅ デプロイ成功"
           SLACK_MESSAGE: |
@@ -78,6 +79,7 @@ jobs:
           SLACK_COLOR: danger
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_CHANNEL: 'app-website-nislab'
+          SLACK_ICON: https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2021-07-06/2257469713729_06357f0ef4a522dfb049_72.png
           SLACK_USERNAME: 'NISLAB GitHub Actions'
           SLACK_TITLE: "❌ デプロイ失敗"
           SLACK_MESSAGE: |
