@@ -11,18 +11,78 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      # 🧩 リポジトリを取得
+      - uses: actions/checkout@v4
 
-      - run: echo "${{ secrets.SERVER_KEY }}" > aws_lightsail_key
+      # ⚙️ Node.js 16 (Nuxt2対応)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
 
-      - run: chmod 600 ./aws_lightsail_key
+      # ⚡️ Yarn依存関係のキャッシュ
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-      - run: ssh -o StrictHostKeyChecking=no -i ./aws_lightsail_key ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "cd /var/www/html/nislab && git pull origin main && bash scripts/rebuild.sh"
+      # 🔐 Secrets から .env を生成
+      - name: Create .env file
+        run: |
+          echo "NUXT_ENV_SPACE_ID=${{ secrets.NUXT_ENV_SPACE_ID }}" >> .env
+          echo "NUXT_ENV_CTF_ACCESS_TOKEN=${{ secrets.NUXT_ENV_CTF_ACCESS_TOKEN }}" >> .env
+          echo "NUXT_ENV_BASE_URL=${{ secrets.NUXT_ENV_BASE_URL }}" >> .env
 
-      - uses: rtCamp/action-slack-notify@v2
+      # 🏗️ Nuxt 2 ビルド
+      - name: Install dependencies and build
+        run: |
+          yarn install --production
+          yarn generate
+
+      # 📦 成果物をアーカイブ
+      - name: Archive build files
+        run: tar -czf dist.tar.gz ./dist
+
+      # 🚀 Lightsailへデプロイ
+      - name: Deploy to AWS Lightsail
+        run: |
+          echo "${{ secrets.SERVER_KEY }}" > aws_lightsail_key
+          chmod 600 aws_lightsail_key
+          scp -i aws_lightsail_key -o StrictHostKeyChecking=no dist.tar.gz \
+            ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/tmp/
+          ssh -i aws_lightsail_key -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
+            "cd /var/www/html/nislab && rm -rf ./dist && tar -xzf /tmp/dist.tar.gz && mv dist/* . && rm -rf dist /tmp/dist.tar.gz"
+
+      # ✅ 成功通知
+      - name: Notify Slack (success)
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
         env:
+          SLACK_COLOR: good
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_CHANNEL: 'app-website-nislab'
-          SLACK_ICON: https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2021-07-06/2257469713729_06357f0ef4a522dfb049_72.png
           SLACK_USERNAME: 'NISLAB GitHub Actions'
-          SLACK_MESSAGE: 'GitHub Actions が完了し、 NISLAB HP が更新されました！'
+          SLACK_TITLE: "✅ デプロイ成功"
+          SLACK_MESSAGE: |
+            Nuxt 2 サイトのデプロイが **成功** しました 🎉  
+            ブランチ: `${{ github.ref_name }}`  
+            コミット: `${{ github.sha }}`  
+            実行者: `${{ github.actor }}`  
+
+      # ❌ 失敗通知
+      - name: Notify Slack (failure)
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: danger
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: 'app-website-nislab'
+          SLACK_USERNAME: 'NISLAB GitHub Actions'
+          SLACK_TITLE: "❌ デプロイ失敗"
+          SLACK_MESSAGE: |
+            デプロイが **失敗** しました ⚠️  
+            ブランチ: `${{ github.ref_name }}`  
+            コミット: `${{ github.sha }}`  
+            実行者: `${{ github.actor }}`  
+            詳細ログ: [GitHub Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
