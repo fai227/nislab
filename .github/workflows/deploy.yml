@@ -43,7 +43,7 @@ jobs:
       - name: Archive build files
         run: tar -czf dist.tar.gz -C dist .
 
-      # 🚀 Lightsailへデプロイ（/var/www/html/nislab に直接展開）
+      # 🚀 Lightsailへデプロイ（/var/www/html に直接展開）
       - name: Deploy to AWS Lightsail
         run: |
           echo "${{ secrets.SERVER_KEY }}" > aws_lightsail_key
@@ -53,9 +53,9 @@ jobs:
           ssh -i aws_lightsail_key -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
             "
-            mkdir -p /var/www/html/nislab && \
-            find /var/www/html/nislab -mindepth 1 -delete && \
-            tar -xzf /tmp/dist.tar.gz -C /var/www/html/nislab && \
+            mkdir -p /var/www/html && \
+            find /var/www/html -mindepth 1 -delete && \
+            tar -xzf /tmp/dist.tar.gz -C /var/www/html && \
             rm /tmp/dist.tar.gz
             "
 
