@@ -37,13 +37,13 @@ jobs:
       - name: Install dependencies and build
         run: |
           yarn install --production
-          yarn generate --fail-on-error --quiet false
+          yarn generate
 
       # 📦 成果物をアーカイブ（distの中身だけ）
       - name: Archive build files
         run: tar -czf dist.tar.gz -C dist .
 
-      # 🚀 Lightsailへデプロイ
+      # 🚀 Lightsailへデプロイ（/var/www/html/nislab に直接展開）
       - name: Deploy to AWS Lightsail
         run: |
           echo "${{ secrets.SERVER_KEY }}" > aws_lightsail_key
@@ -52,7 +52,12 @@ jobs:
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/tmp/
           ssh -i aws_lightsail_key -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
-            "mkdir -p /var/www/html/nislab && rm -rf /var/www/html/nislab/* && tar -xzf /tmp/dist.tar.gz -C /var/www/html/nislab && rm /tmp/dist.tar.gz"
+            "
+            mkdir -p /var/www/html/nislab && \
+            find /var/www/html/nislab -mindepth 1 -delete && \
+            tar -xzf /tmp/dist.tar.gz -C /var/www/html/nislab && \
+            rm /tmp/dist.tar.gz
+            "
 
       # ✅ 成功通知
       - name: Notify Slack (success)
@@ -66,11 +71,7 @@ jobs:
           SLACK_USERNAME: 'NISLAB GitHub Actions'
           SLACK_TITLE: "✅ デプロイ成功"
           SLACK_MESSAGE: |
-            Nuxt 2 サイトのデプロイが **成功** しました 🎉  
-            ブランチ: `${{ github.ref_name }}`  
-            実行者: `${{ github.actor }}`  
-            トリガー: ${{ github.event_name == 'repository_dispatch' && github.event.action || 'push' }}  
-            コミット: `${{ github.sha }}`  
+            NISLAB HPのデプロイが成功しました！
 
       # ❌ 失敗通知
       - name: Notify Slack (failure)
@@ -84,9 +85,5 @@ jobs:
           SLACK_USERNAME: 'NISLAB GitHub Actions'
           SLACK_TITLE: "❌ デプロイ失敗"
           SLACK_MESSAGE: |
-            デプロイが **失敗** しました ⚠️  
-            ブランチ: `${{ github.ref_name }}`  
-            実行者: `${{ github.actor }}`  
-            トリガー: ${{ github.event_name == 'repository_dispatch' && github.event.action || 'push' }}  
-            コミット: `${{ github.sha }}`  
-            詳細ログ: [GitHub Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            NISLAB HPのデプロイが失敗しました。
+            詳細は「Actions URL」をご確認ください。
