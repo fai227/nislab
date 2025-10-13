@@ -73,7 +73,7 @@ jobs:
           SLACK_MESSAGE: |
             NISLAB HPのデプロイが成功しました！
             更新をご確認ください。
-            [サイトを確認](https://nislab.doshisha.ac.jp/)
+            NISLAB HP: https://nislab.doshisha.ac.jp/
 
       # ❌ 失敗通知
       - name: Notify Slack (failure)
@@ -89,3 +89,5 @@ jobs:
           SLACK_MESSAGE: |
             NISLAB HPのデプロイが失敗しました。
             ログの詳細は「Actions URL」をご確認ください。
+            
+            NISLAB HP: https://nislab.doshisha.ac.jp/
