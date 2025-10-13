@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 🧩 リポジトリを取得
+      # 🧩 リポジトリ取得
       - uses: actions/checkout@v4
 
       # ⚙️ Node.js 16 (Nuxt2対応)
@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 16
 
-      # ⚡️ Yarn依存関係のキャッシュ
+      # ⚡️ Yarn依存関係キャッシュ
       - uses: actions/cache@v3
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-      # 🔐 Secrets から .env を生成
+      # 🔐 Secretsから.env生成
       - name: Create .env file
         run: |
           echo "NUXT_ENV_SPACE_ID=${{ secrets.NUXT_ENV_SPACE_ID }}" >> .env
@@ -39,9 +39,9 @@ jobs:
           yarn install --production
           yarn generate --fail-on-error --quiet false
 
-      # 📦 成果物をアーカイブ
+      # 📦 成果物をアーカイブ（distの中身だけ）
       - name: Archive build files
-        run: tar -czf dist.tar.gz ./dist
+        run: tar -czf dist.tar.gz -C dist .
 
       # 🚀 Lightsailへデプロイ
       - name: Deploy to AWS Lightsail
@@ -52,7 +52,7 @@ jobs:
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/tmp/
           ssh -i aws_lightsail_key -o StrictHostKeyChecking=no \
             ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
-            "mkdir -p /var/www/html/nislab/dist && cd /var/www/html/nislab/dist && rm -rf ./* && tar -xzf /tmp/dist.tar.gz -C /var/www/html/nislab/dist && rm /tmp/dist.tar.gz"
+            "mkdir -p /var/www/html/nislab && rm -rf /var/www/html/nislab/* && tar -xzf /tmp/dist.tar.gz -C /var/www/html/nislab && rm /tmp/dist.tar.gz"
 
       # ✅ 成功通知
       - name: Notify Slack (success)
@@ -68,8 +68,9 @@ jobs:
           SLACK_MESSAGE: |
             Nuxt 2 サイトのデプロイが **成功** しました 🎉  
             ブランチ: `${{ github.ref_name }}`  
-            コミット: `${{ github.sha }}`  
             実行者: `${{ github.actor }}`  
+            トリガー: ${{ github.event_name == 'repository_dispatch' && github.event.action || 'push' }}  
+            コミット: `${{ github.sha }}`  
 
       # ❌ 失敗通知
       - name: Notify Slack (failure)
@@ -85,6 +86,7 @@ jobs:
           SLACK_MESSAGE: |
             デプロイが **失敗** しました ⚠️  
             ブランチ: `${{ github.ref_name }}`  
-            コミット: `${{ github.sha }}`  
             実行者: `${{ github.actor }}`  
+            トリガー: ${{ github.event_name == 'repository_dispatch' && github.event.action || 'push' }}  
+            コミット: `${{ github.sha }}`  
             詳細ログ: [GitHub Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
