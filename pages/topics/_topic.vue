@@ -106,7 +106,7 @@ export default {
           property: 'og:image',
           content: this.post.post.fields.headerImage.fields
             ? 'https:' + this.post.post.fields.headerImage.fields.file.url
-            : 'https://nislab.doshisha.ac.jp/nislab-ogp.png',
+            : $config.baseURL + '/nislab-ogp.png',
         },
       ],
     }
