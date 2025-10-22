@@ -94,7 +94,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: $config.baseURL + this.post.post.sys.id,
+          content: $config.baseURL + '/topics/' + this.post.post.sys.id,
         },
         {
           hid: 'og:title',
@@ -104,11 +104,9 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content:
-            'https:' +
-            (this.post.post.fields.headerImage.fields
-              ? this.post.post.fields.headerImage.fields.file.url
-              : '/nislab-ogp.png'),
+          content: this.post.post.fields.headerImage.fields
+            ? 'https:' + this.post.post.fields.headerImage.fields.file.url
+            : 'https://nislab.doshisha.ac.jp/nislab-ogp.png',
         },
       ],
     }
