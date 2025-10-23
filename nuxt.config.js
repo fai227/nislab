@@ -112,6 +112,7 @@ export default {
     '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/moment
     '@nuxtjs/moment',
+    '@nuxtjs/sitemap',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -195,4 +196,9 @@ export default {
     baseURL: process.env.NUXT_ENV_BASE_URL,
   },
   loading: '~/components/utility/Loading.vue',
+
+  sitemap: {
+    hostname: process.env.NUXT_ENV_BASE_URL,
+    gzip: true,
+  }
 }
